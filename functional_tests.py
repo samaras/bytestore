@@ -14,7 +14,7 @@ class NewVisitorTest(unittest.TestCase):
 		self.browser.get("http://localhost:8083")
 
 		# Check page title and header
-		self.assertIn('To-Do', self.browser.title)
+		self.assertIn('Byte', self.browser.title)
 		self.fail('Finish the test!')
 
 if __name__ == '__main__':

@@ -1,15 +1,29 @@
 from django.db import models
-from django.auth import User
+from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
+from django.utils.html import escape
+from django.core.urlresolvers import reverse
 
 # Create your models here.
 
+class TimeStampedModel(models.Model):
+	created = models.DateTimeField(auto_now_add=True)
+	modified = models.DateTimeField(auto_now = True)
+
+	class Meta:
+		abstract = True
+
+
 class Store(models.Model):
-	name = models.CharField(max_length=200)
+	store_name = models.CharField(max_length=200)
 	owner = models.ForeignKey(User)
 
 class Category(models.Model):
 	category = models.CharField(max_length=150)
 	store = models.ForeignKey(Store)
+
+	def __str__(self):
+		return "%s" % self.category
 
 class Product(models.Model):
 	product_name = models.CharField(max_length=150)
@@ -17,9 +31,11 @@ class Product(models.Model):
 	category = models.ForeignKey(Category)
 	stock = models.IntegerField()
 
-class Order(models.Model):
+	def __str__(self):
+		return "%s (%s)" % (self.product_name, self.product_sku)
+
+class Order(TimeStampedModel):
 	total = models.DecimalField(max_digits=10, decimal_places=4)
-	date_added = models.DateTimeField()
 	user = models.ForeignKey(User)
 
 class ProductOrder(models.Model):
@@ -29,11 +45,12 @@ class ProductOrder(models.Model):
 	item_price = models.DecimalField(max_digits=10, decimal_places=4)
 	order_status = models.BooleanField()
 
-class Cart(models.Model):
+	def __str__(self):
+		return ""
+
+class Cart(TimeStampedModel):
 	user = models.ForeignKey(User)
 	store = models.ForeignKey(Store)
-	date_added = models.DateTimeField()
-	date_updated = models.DateTimeField()
 	is_guest = models.BooleanField()
 
 class CartProduct(models.Model):
@@ -41,4 +58,3 @@ class CartProduct(models.Model):
 	product = models.ForeignKey(Product)
 	store = models.ForeignKey(Store)
 	quantity = models.IntegerField()
-	date_added = models.DateTimeField()
