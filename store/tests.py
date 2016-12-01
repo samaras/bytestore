@@ -39,3 +39,4 @@ class StoreModelTest(TestCase):
         self.assertEqual(first_saved_item.store_name, 'Computer Mart')
         self.assertEqual(second_saved_item.store_name, 'Star Shop')
         
+
