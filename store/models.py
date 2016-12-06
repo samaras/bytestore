@@ -3,9 +3,11 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
+from django import forms
 
 from django.utils import timezone
 import datetime
+import decimal
 
 # Create your models here.
 
@@ -16,45 +18,69 @@ class TimeStampedModel(models.Model):
 	class Meta:
 		abstract = True
 
-
 class Store(models.Model):
 	store_name = models.CharField(max_length=200, unique=True, verbose_name=_("Store Name"))
 	owner = models.ForeignKey(User, verbose_name=_("Store Owner"))
 
 	class Meta:
-		verbose_name = _("Store")
 		verbose_name_plural = _("Store's")
 
 	def __unicode__(self):
 		return self.store_name
 
-class Category(models.Model):
+class Category(TimeStampedModel):
 	category = models.CharField(max_length=150, verbose_name=_("Category"))
 	store = models.ForeignKey(Store, verbose_name=_("Store Name"))
+	slug = models.SlugField(max_length=50, unique=True)
+	is_active = models.BooleanField(default=True)
 
 	class Meta:
-		verbose_name = _("Product")
-		verbose_name_plural = _("Products")
+		db_table = 'categories'
+		unique_together = ('category', 'store')
+		ordering = ['-created']
+		verbose_name_plural = _("Categories")
 
 	def __unicode__(self):
-		return "%s" % self.category
+		return self.category
+
+	@models.permalink
+	def get_absolute_url(self):
+		return ('catalog_category', (), { 'category_slug': self.slug })
 
 class Product(models.Model):
 	product_name = models.CharField(max_length=150, verbose_name=_("Product Name"))
 	product_sku = models.CharField(max_length=50, verbose_name=_("Product SKU"), unique=True)
 	category = models.ForeignKey(Category, verbose_name=_("Category"))
-	stock = models.IntegerField(verbose_name=_("Stock Quantity"))
-
-	class Meta:
-		verbose_name = _("Product")
-		verbose_name_plural = _("Products")
+	price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Price"))
+	qty_stock = models.IntegerField(verbose_name=_("Stock Quantity"))
+	product_image = models.ImageField(upload_to='images/products')
+	product_status = models.BooleanField(default=True)
+	description = models.TextField()
+	slug = models.SlugField(unique=True)
 
 	def __unicode__(self):
 		return "%s (%s)" % (self.product_name, self.product_sku)
 
+	@models.permalink
+	def get_absolute_url(self):
+		return ('catalog_product', (), { 'product_slug': self.slug })
+
 class Order(TimeStampedModel):
-	total = models.DecimalField(max_digits=10, decimal_places=4, verbose_name=_("Total Price"))
-	user = models.ForeignKey(User, verbose_name=_("Customer"))
+	PROCESSED 	= 1
+	SHIPPED 	= 2
+	CANCELLED	= 3
+
+	ORDER_STATUSES = ((PROCESSED, 'Processed'), (SHIPPED, 'Shipped'), (CANCELLED, 'Cancelled'))
+
+	total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Total Price"))
+	user = models.ForeignKey(User, verbose_name=_("Customer"), null=True)
+	status = models.IntegerField(choices=ORDER_STATUSES)
+	transaction_id = models.CharField(max_length=20)
+
+	# shipping information
+	shipping_address1 = models.CharField(max_length=50)
+	shipping_address2 = models.CharField(max_length=50)
+	shipping_city 	  = models.CharField(max_length=50)
 
 	class Meta:
 		verbose_name = _("Order")
@@ -64,29 +90,18 @@ class Order(TimeStampedModel):
 	def was_ordered_recently(self):
 		return self.created >= timezone.now - datetime.timedelta(days=3)
 
-class ProductOrder(models.Model):
+	@property
+	def total(self):
+		total = decimal.Decimal('0.00')
+		order_items = OrderProduct.objects.filter(order=self)
+
+		for product in order_items:
+			total += item.total
+		return total
+	
+
+class OrderProduct(models.Model):
 	order = models.ForeignKey(Order, verbose_name=_("Order"))
 	product = models.ForeignKey(Product, verbose_name=_("Product Name"))
-	quantity = models.IntegerField(verbose_name=_("Quantity"))
-	item_price = models.DecimalField(max_digits=10, decimal_places=4, verbose_name=_("Price"))
-
-
-class Cart(TimeStampedModel):
-	user = models.ForeignKey(User, verbose_name=_("Customer"))
-	store = models.ForeignKey(Store, verbose_name=_("Store Name"))
-	is_guest = models.BooleanField(verbose_name=_("Guest?"))
-
-	class Meta:
-		verbose_name = _("Cart")
-		verbose_name_plural = _("Carts")
-
-	def __unicode__(self):
-		return "%s %s" % (self.user.first_name, self.user.last_name)
-
-class CartProduct(models.Model):
-	cart = models.ForeignKey(Cart, verbose_name=_("Cart"))
-	product = models.ForeignKey(Product, verbose_name=_("Product Name"))
-	store = models.ForeignKey(Store, verbose_name=_("Store Name"))
-	quantity = models.IntegerField(verbose_name=_("Quantity"))
-
-    
+	quantity = models.SmallIntegerField(verbose_name=_("Quantity"), default=1)
+	item_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Price"))
