@@ -1,11 +1,13 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
 
 from store.models import Product, Store, TimeStampedModel, Category
 
 # Create your models here.
 
 class Cart(TimeStampedModel):
-	user = models.ForeignKey(User, verbose_name=_("Customer"))
+	user = models.ForeignKey(User, verbose_name=_("Customer"), null=True)
 	store = models.ForeignKey(Store, verbose_name=_("Store Name"))
 	is_guest = models.BooleanField(verbose_name=_("Guest?"), default=True)
 	products = models.ManyToManyField(Product, through='CartProduct')
@@ -31,6 +33,3 @@ class CartProduct(models.Model):
 
 	def price(self):
 		return self.product.price
-
-	def get_absolute_url(self):
-		return self.product.get_absolute_url()

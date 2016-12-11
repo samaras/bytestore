@@ -35,7 +35,7 @@ class Category(TimeStampedModel):
 	is_active = models.BooleanField(default=True)
 
 	class Meta:
-		db_table = 'categories'
+		db_table = 'store_categories'
 		unique_together = ('category', 'store')
 		ordering = ['-created']
 		verbose_name_plural = _("Categories")
@@ -59,7 +59,7 @@ class Product(models.Model):
 	slug = models.SlugField(unique=True)
 
 	def __unicode__(self):
-		return "%s (%s)" % (self.product_name, self.product_sku)
+		return u"%s (%s)" % (self.product_name, self.product_sku)
 
 	@models.permalink
 	def get_absolute_url(self):
@@ -76,6 +76,7 @@ class Order(TimeStampedModel):
 	user = models.ForeignKey(User, verbose_name=_("Customer"), null=True)
 	status = models.IntegerField(choices=ORDER_STATUSES)
 	transaction_id = models.CharField(max_length=20)
+	products = models.ManyToManyField(Product, through='OrderProduct')
 
 	# shipping information
 	shipping_address1 = models.CharField(max_length=50)
