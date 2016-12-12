@@ -24,9 +24,16 @@ class Store(models.Model):
 
 	class Meta:
 		verbose_name_plural = _("Store's")
+		permissions = (
+			("view_store", "Can view stores"),
+		)
 
-	def __unicode__(self):
+	def __unicode__(self, user):
 		return self.store_name
+
+	def is_owner(self):
+		owner = self.owner == user.id
+		return owner
 
 class Category(TimeStampedModel):
 	category = models.CharField(max_length=150, verbose_name=_("Category"))
