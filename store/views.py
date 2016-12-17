@@ -20,7 +20,7 @@ class StoreUpdate(UpdateView):
 	fields = ['store_name']
 
 class StoreDelete(DeleteView):
-	model = Author
+	model = Store
 	success_url = reverse_lazy('store-list')
 
 # Create your views here.

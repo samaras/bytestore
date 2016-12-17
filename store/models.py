@@ -94,6 +94,9 @@ class Order(TimeStampedModel):
 		verbose_name = _("Order")
 		verbose_name_plural = _("Orders")
 		ordering = ["created"]
+		permissions = (
+			("view_order", "Can view orders"),
+		)
 
 	def was_ordered_recently(self):
 		return self.created >= timezone.now - datetime.timedelta(days=3)
