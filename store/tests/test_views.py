@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.test import Client
 from django.core.urlresolvers import resolve
 from django.http import HttpRequest
 from django.contrib.auth.models import User
@@ -20,6 +21,26 @@ class HomePageTest(TestCase):
         response = home_page(request)
         self.assertIn(b'Byte Store</title>', response.content)
         
+        
+class ViewTests(TestCase):
+	
+	def testStoreView(self):
+		resp = self.client.get('/store/')
+		self.assertEqual(resp.status_code, 200)
+		
+	def testProductView(TestCase):
+		resp = self.client.get('/product/')
+		self.assertEqual(resp.status_code, 200)
+		
+	def testCategoryView(TestCase):
+		resp = self.client.get('/category/')
+		self.assertEqual(resp.status_code, 200)
+	
+	def testCartView(TestCase):
+		resp = self.client.get('/cart/')
+		self.assertEqual(resp.status_code, 200)
+		
+
 class StoreModelTest(TestCase):
 
     def test_saving_and_retrieving_store(self):
