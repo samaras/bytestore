@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% if store.id %}
+<h1>Edit Store</h1>
+{% else %}
+<h1>Add Store</h1>
+{% endif %}
+
+<form action="{% url "store-new" %}" method="post">
+	{% csrf_token %}
+	<ul>
+		{{ form.as_ul }}
+	</ul>
+	<input id="save_store" type="submit" value="Save" />
+</form>
+<a href="{% url "stores-list" %}">back to store list</a>
