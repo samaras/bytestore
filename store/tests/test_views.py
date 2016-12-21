@@ -1,28 +1,19 @@
 from django.test import TestCase
-from django.test import Client
+from django.test.client import Client
 from django.core.urlresolvers import resolve
 from django.http import HttpRequest
 from django.contrib.auth.models import User
+from django.contrib.staticfiles import finders
+from django.contrib.staticfiles.storage import staticfiles_storage
 
 from store.models import Store
 from store.views import home_page
-
-
-# Create your tests here.
-
-class HomePageTest(TestCase):
-
-    def test_home_page_url_and_view(self):
-        found = resolve('/')
-        self.assertEqual(found.func, home_page)
-
-    def test_home_page_returns_correct_html(self):
-        request = HttpRequest()
-        response = home_page(request)
-        self.assertIn(b'Byte Store</title>', response.content)
         
         
 class ViewTests(TestCase):
+
+    def setUp(self):
+        self.client = Client()
 	
 	def testStoreView(self):
 		resp = self.client.get('/store/')
@@ -43,14 +34,22 @@ class ViewTests(TestCase):
 
 class StoreModelTest(TestCase):
 
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(username='foo', password='bar')
+        self.user.save()
+
     def test_saving_and_retrieving_store(self):
+        self.client.login(username='foo', password='bar')
+
+
         first_store = Store()
         first_store.store_name = 'Computer Mart'
-        first_store.owner = User()
+        first_store.owner = self.user
         
         second_store = Store()
         second_store.store_name = 'Star Shop'
-        second_store.owner = User()
+        second_store.owner = self.user
         
         saved_stores = Store.objects.all()
         self.assertEqual(saved_stores.count(), 2)
@@ -60,4 +59,18 @@ class StoreModelTest(TestCase):
         self.assertEqual(first_saved_item.store_name, 'Computer Mart')
         self.assertEqual(second_saved_item.store_name, 'Star Shop')
         
+class TestStaticFiles(TestCase):
+    """Check if app contains required static files"""
+    def test_images(self):
+        abs_path = finders.find('bytestore.png')
+        self.assertIsNotNone(abs_path)
+        abs_path = finders.find('apple-touch-icon.png')
+        self.assertIsNotNone(abs_path)
 
+    def test_css(self):
+        abs_path = finders.find('css/main.css')
+        self.assertIsNotNone(abs_path)
+        abs_path = finders.find('libs/bootstrap-3.3.5/css/bootstrap.css')
+        self.assertIsNotNone(abs_path)
+        abs_path = finders.find('libs/font-awesome-4.3.0/css/font-awesome.css')
+        self.assertIsNone(abs_path)

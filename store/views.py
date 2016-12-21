@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
-from store.models import Store
+from store.models import Store, Product, Category
 
 class StoreListView(ListView):
 	model = Store
