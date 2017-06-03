@@ -1,12 +1,29 @@
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
 from store.models import Store, Product, Category
 
+class RestrictToLoggedInUserMixin(self):
+	""" Add a restriction that the logged in user can only objects belonging to them """
+	def get_queryset(self):
+		queryset = super(RestrictToLoggedInUserMixin, self).get_queryset()
+		queryset = queryset.filter(user=self.request.user)
+		return queryset
+
 class StoreListView(ListView):
-	model = Store
+	queryset = Store.objects.order_by('store_name')
 	template_name = 'store_list.html'
+	context_object_name = 'store_list'
+
+class StoreDetail(DetailView):
+	context_object_name = 'store'
+	queryset = Store.objects.all()
+
+	def get_context_data(self, **kwargs):
+		context = super(StoreDetail, self).get_context_data(**kwargs)
+		context['product_list'] = Product.objects.all()
+		return context
 
 class StoreCreateView(CreateView):
 	model = Store 

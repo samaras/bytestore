@@ -46,6 +46,9 @@ class Category(TimeStampedModel):
 		unique_together = ('category', 'store')
 		ordering = ['-created']
 		verbose_name_plural = _("Categories")
+		permissions = (
+			("view_category", "Can view categories"),
+		)
 
 	def __unicode__(self):
 		return self.category
@@ -64,6 +67,11 @@ class Product(models.Model):
 	product_status = models.BooleanField(default=True)
 	description = models.TextField()
 	slug = models.SlugField(unique=True)
+
+	class Meta:
+		permissions = (
+			("view_product", "Can view products"),
+		)
 
 	def __unicode__(self):
 		return u"%s (%s)" % (self.product_name, self.product_sku)
