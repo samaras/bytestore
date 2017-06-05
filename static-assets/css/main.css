@@ -4,8 +4,181 @@
    Author's custom styles
    ========================================================================== */
 
+#header-section .navbar-brand {
+    color: #fff;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.img-header {
+    color: #333;
+    font-family: sans-serif;
+    font-size: 35px;
+    margin-top: 85px;
+    text-align: center;
+    text-shadow: 3px 3px 1px black;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+.logo-img {
+    position: relative;
+    top: -25px;
+}
+
+.logo-span {
+    position: relative;
+    text-shadow: 2px 2px 3px black;
+    top: -22px;
+}
+
+.text-center {
+    text-align: center;
+}
 
 
+footer {
+    background-color: #313235;
+    border-top: 1px solid #eaeaea;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 20px 0;
+    width: 100%;
+    margin-top: 15px;
+}
+.copyright a {
+    color: #f5f5f5;
+}
+.stuck {
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.06);
+    min-height: 80px;
+}
+.navbar {
+    border-radius: 0;
+}
+.navbar-header {
+    margin-top: 10px;
+}
+#header-section {
+    background: #f5f5f5 none repeat scroll 0 0;
+    border: medium none;
+    margin-bottom: 0;
+    margin-top: 40px;
+    opacity: 1;
+    width: 100%;
+    z-index: 99;
+}
+#header-section {
+    background: #f5f5f5 none repeat scroll 0 0;
+    box-shadow: 0 8px 6px -6px black;
+    margin-top: 0;
+}
+
+#navbar {
+    min-height: 80px;
+    padding-top: 15px;
+}
+#header-section #navbar li a {
+    color: #333;
+    transition: all 0.3s ease 0s;
+}
+#header-section #navbar li a:hover {
+    color: #666 !important;
+}
+#header-section #navbar li a span::before {
+    background: transparent none repeat scroll 0 0 !important;
+}
+#header-section #navbar li.active a {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    color: rgba(0, 0, 0, 0.8) !important;
+}
+#header-section #navbar li.active a span::before {
+    transform: scaleX(1);
+    visibility: visible;
+}
+#header-section #navbar li a {
+    color: #333;
+    font-size: 14px;
+    font-weight: 600;
+    position: relative;
+    text-transform: uppercase;
+}
+#header-section #navbar li a span {
+    display: block;
+    padding-bottom: 2px;
+    position: relative;
+}
+#header-section #navbar li a span::before {
+    bottom: 0;
+    content: "";
+    height: 2px;
+    left: 0;
+    position: absolute;
+    visibility: hidden;
+    width: 100%;
+}
+#header-section #navbar li a:hover {
+    background: transparent none repeat scroll 0 0;
+    color: #888;
+}
+#header-section #navbar li.active a {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    color: #000;
+}
+#header-section .navbar-brand {
+    color: #444;
+    display: block;
+    float: left;
+    font-size: 30px;
+    font-weight: 700;
+    padding-left: 0;
+}
+#header-section #navbar li a {
+    color: #333;
+    transition: all 0.3s ease 0s;
+}
+#header-section .navbar-default {
+    background: transparent none repeat scroll 0 0;
+    border: medium none transparent;
+    border-radius: 0;
+}
+@media (max-width: 1200px) {
+.navbar-toggle {
+    border: 1px solid #333;
+    display: block;
+}
+.navbar-collapse {
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4) inset;
+}
+}
+
+
+footer {
+	padding: 25px;
+}
+
+input, textarea {
+	background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 0px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    color: #555;
+    display: block;
+    font-size: 14px;
+    height: 34px;
+    line-height: 1.42857;
+    padding: 6px 12px;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    min-width: 300px;
+}
+
+button {
+	background-image: linear-gradient(to bottom, #5cb85c 0px, #419641 100%);
+    background-repeat: repeat-x;
+    border-color: #3e8f3e;
+}
 
 
 

@@ -4,12 +4,12 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
 from store.models import Store, Product, Category
 
-class RestrictToLoggedInUserMixin(self):
-	""" Add a restriction that the logged in user can only objects belonging to them """
+"""class RestrictToLoggedInUserMixin(self):
+	Add a restriction that the logged in user can only objects belonging to them 
 	def get_queryset(self):
 		queryset = super(RestrictToLoggedInUserMixin, self).get_queryset()
 		queryset = queryset.filter(user=self.request.user)
-		return queryset
+		return queryset"""
 
 class StoreListView(ListView):
 	queryset = Store.objects.order_by('store_name')

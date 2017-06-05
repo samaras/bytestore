@@ -63,8 +63,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'bytestore',
-        'USER': 'root',
-        'PASSWORD': 'sam123kom'
+        'USER': 'bytestore',
+        'PASSWORD': 'byte123store',
+        'HOST': '127.0.0.1',
+        'PORT': 3306,
     }
 }
 
@@ -73,7 +75,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Johannesburg'
 
 USE_I18N = True
 
@@ -85,9 +87,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/static-assets/'
 
-TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static-assets"),
+)
+STATIC_ROOT = '/static/'
+
+TEMPLATE_DIRS = [
+	os.path.join(BASE_DIR, 'templates')
+]
 
 
 # Auth Redirects
