@@ -21,3 +21,9 @@ class StoreAndProductModelsTest(TestCase):
 
 		with self.assertRaises(ValidationError):
 			product.save()
+
+	def test_string_representation(self):
+		store = Store(store_name='KomfiMart', owner=self.user)
+		self.assertEqual(str(store), store.store_name)
+
+	

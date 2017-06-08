@@ -5,6 +5,8 @@
 	<ul>
 		{% for store in object_list %}
 			<li>{{ store.store_name }}</li>
+		{% empty %}
+			<p>No stores available yet.</p>
 		{% endfor %}	
 	</ul>
-{% endblock %}
+{% endblock content %}
