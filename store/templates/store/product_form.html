@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% if product.id %}
+<h1>Edit Product</h1>
+{% else %}
+<h1>Add Product</h1>
+{% endif %}
+
+<form action="{% url "product-new" %}" method="post">
+	{% csrf_token %}
+	<ul>
+		{{ form.as_ul }}
+	</ul>
+	<input id="save_store" type="submit" value="Save" />
+</form>
+<a href="{% url "product-list" %}">back to products list</a>

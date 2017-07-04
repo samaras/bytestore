@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% if category.id %}
+<h1>Edit Category</h1>
+{% else %}
+<h1>Add Category</h1>
+{% endif %}
+
+<form action="{% url "category-new" %}" method="post">
+	{% csrf_token %}
+	<ul>
+		{{ form.as_ul }}
+	</ul>
+	<input id="save_store" type="submit" value="Save" />
+</form>
+<a href="{% url "categories-list" %}">back to category list</a>
