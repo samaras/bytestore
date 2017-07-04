@@ -10,7 +10,7 @@ from accounts.models import Profile
 class ProfileInline(admin.StackedInline):
 	model = Profile
 	can_delete = False
-	verbose_name_plural = _('employee')
+	verbose_name_plural = _('Profiles')
 
 class UserAdmin(BaseUserAdmin):
 	inlines = (ProfileInline, )
