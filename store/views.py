@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
-from store.models import Store, Product, Category
+
+from .models import Store, Product, Category
 
 """class RestrictToLoggedInUserMixin(self):
 	Add a restriction that the logged in user can only objects belonging to them 
